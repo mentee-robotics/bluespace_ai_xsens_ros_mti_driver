@@ -85,7 +85,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
     int numberOfStates = 6;
     int numberOfMesurments = 6;
     rclcpp::Node &node_handle;
-
+    bool useImuTime = false;
     // Kalman filter vars
     bool doKalmanFilter = false;
     KalmanFilter kf;
@@ -97,6 +97,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
         double freeAccVariance = 0.0;
         double angVelVariance = 0.0;
         double processNoiseFactor;
+
         // declare kalman params
         node.declare_parameter("do_kalman_filter", doKalmanFilter);
         node.declare_parameter("free_acc_var", freeAccVariance);
@@ -108,6 +109,9 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
         node.declare_parameter("angular_velocity_stddev", variance);
         node.declare_parameter("linear_acceleration_stddev", variance);
 
+        // declare generel params
+        node.declare_parameter("use_imu_time", useImuTime);
+        
         // Init publisher
         int pub_queue_size = 5;
         node.get_parameter("publisher_queue_size", pub_queue_size);
@@ -123,7 +127,8 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
             node.get_parameter("process_noise_factor", processNoiseFactor);
             initKalman(freeAccVariance, angVelVariance, processNoiseFactor);
         }
-
+        // get time parameters
+        node.get_parameter("use_imu_time", useImuTime);
         node.get_parameter("time_zone_offset", timeZoneOffset);
         // REP 145: Conventions for IMU Sensor Drivers (http://www.ros.org/reps/rep-0145.html)
         variance_from_stddev_param("orientation_stddev", orientation_variance, node);
@@ -268,7 +273,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
         {
             sensor_msgs::msg::Imu msg;
 
-            if (packet.containsUtcTime())
+            if (packet.containsUtcTime() && useImuTime)
                 msg.header.stamp = get_utc_time(packet);
             else
                 msg.header.stamp = timestamp;

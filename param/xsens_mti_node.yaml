@@ -22,6 +22,7 @@
         publisher_queue_size: 5
 
         time_zone_offset: 2
+        use_imu_time: false
 
         # Message publishers
         pub_imu: false
@@ -55,4 +56,4 @@
         do_kalman_filter: true
         free_acc_var: 7.200000000000002e-05
         ang_vel_var: 2.9852507139097437e-06
-        process_noise_factor: 0.1
+        process_noise_factor: 0.001
