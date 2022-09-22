@@ -82,12 +82,13 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
     double angular_velocity_variance[3];
     int frameId = 0;
     int timeZoneOffset;
-    int numberOfStates = 6;
-    int numberOfMesurments = 6;
     rclcpp::Node &node_handle;
     bool useImuTime = false;
     // Kalman filter vars
     bool doKalmanFilter = false;
+    int numberOfStates = 6;
+    int numberOfMesurments = 6;
+    float freq = 200;
     KalmanFilter kf;
 
     ImuFreeAccPublisher(rclcpp::Node &node)
@@ -103,6 +104,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
         node.declare_parameter("free_acc_var", freeAccVariance);
         node.declare_parameter("ang_vel_var", angVelVariance);
         node.declare_parameter("process_noise_factor", processNoiseFactor);
+        node.declare_parameter("freq", freq);
 
         // declare stdv params
         node.declare_parameter("orientation_stddev", variance);
@@ -125,6 +127,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
             node.get_parameter("free_acc_var", freeAccVariance);
             node.get_parameter("ang_vel_var", angVelVariance);
             node.get_parameter("process_noise_factor", processNoiseFactor);
+            node.get_parameter("freq", freq);
             initKalman(freeAccVariance, angVelVariance, processNoiseFactor);
         }
         // get time parameters
@@ -139,8 +142,8 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
     void initKalman(double freeAccVariance, double angVelVariance, double processNoiseFactor)
     {
 
-        double dt = 1.0 / 200.0;
-
+        double dt = 1.0 / float(freq);
+        std::cout << "frequency is: " << freq << " dt is " << dt << std::endl; 
         Eigen::MatrixXd A = Eigen::MatrixXd::Identity(numberOfStates, numberOfStates);         // System dynamics matrix
         Eigen::MatrixXd C = Eigen::MatrixXd::Identity(numberOfMesurments, numberOfStates);     // Output matrix
         Eigen::MatrixXd Q = Eigen::MatrixXd::Identity(numberOfStates, numberOfStates);         // Process noise covariance
