@@ -104,12 +104,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
         node.declare_parameter("free_acc_var", freeAccVariance);
         node.declare_parameter("ang_vel_var", angVelVariance);
         node.declare_parameter("process_noise_factor", processNoiseFactor);
-        node.declare_parameter("freq", freq);
-
-        // declare stdv params
-        node.declare_parameter("orientation_stddev", variance);
-        node.declare_parameter("angular_velocity_stddev", variance);
-        node.declare_parameter("linear_acceleration_stddev", variance);
+        node.declare_parameter("freq", freq);       
 
         // declare generel params
         node.declare_parameter("use_imu_time", useImuTime);
