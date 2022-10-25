@@ -3,6 +3,7 @@ from launch.actions import SetEnvironmentVariable
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from pathlib import Path
+from os import getenv, path
 
 def generate_launch_description():
 
@@ -12,7 +13,9 @@ def generate_launch_description():
     arg = SetEnvironmentVariable('RCUTILS_CONSOLE_STDOUT_LINE_BUFFERED', '1')
     ld.add_action(arg)
 
-    parameters_file_path = Path(get_package_share_directory('bluespace_ai_xsens_mti_driver'), 'param', 'xsens_mti_node.yaml')
+    code_path = getenv("CODE_PATH", None)
+    imu_params_path = path.join(code_path, "ros2_workspace/menteebot/configs/sensors/imus/xsens_mti_node.yaml")
+    parameters_file_path = Path(imu_params_path)
     xsens_mti_node = Node(
             package='bluespace_ai_xsens_mti_driver',
             executable='xsens_mti_node',
