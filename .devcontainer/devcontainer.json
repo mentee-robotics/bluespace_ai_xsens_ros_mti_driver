@@ -4,7 +4,8 @@
         "args": {
             "BASE_IMAGE": "ros:foxy-ros-base"
         },
-        "target": "base"
+        "target": "release",
+        "context": ".."
     },
 
     "remoteUser": "root",
