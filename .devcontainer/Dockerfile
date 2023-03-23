@@ -29,6 +29,7 @@ ADD . /root/ros2_ws/
 
 # compiling the workspace
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
+    pushd lib/xspublic && make && popd && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 # add the entrypoint script
