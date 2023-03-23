@@ -1,6 +1,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE} as base
 
+SHELL [ "/bin/bash", "-c" ]
+
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN sudo apt-get update &&\
     sudo apt-get install -y \
         ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
@@ -21,7 +25,7 @@ RUN echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${RO
 FROM base as release
 
 WORKDIR /root/ros2_ws
-ADD . /root/ros2_ws
+ADD . /root/ros2_ws/
 
 # compiling the workspace
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
