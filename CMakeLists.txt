@@ -26,12 +26,8 @@ find_package(Eigen3)
 ###########
 ## Build ##
 ###########
-set(xspublic_linked_libraries
-  xscontroller
-  xscommon
-  xstypes
-)
 
+link_directories(lib/xspublic/xscontroller lib/xspublic/xscommon lib/xspublic/xstypes)
 add_executable(
 	xsens_mti_node
 	src/main.cpp
@@ -40,15 +36,9 @@ add_executable(
   src/kalman_filter.cpp
 )
 
-target_link_libraries(xspublic_linked_libraries
-                      ${xspublic_linked_libraries})
-
 target_include_directories(xsens_mti_node PUBLIC
-  /usr/include/lib/xspublic  
-)
-
-target_link_directories(xsens_mti_node PUBLIC
-  /usr/lib/xspublics)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic>
+  $<INSTALL_INTERFACE:include>)
 
 ament_target_dependencies(xsens_mti_node 
   rclcpp
