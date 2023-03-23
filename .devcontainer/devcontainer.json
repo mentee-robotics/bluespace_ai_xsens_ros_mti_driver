@@ -1,0 +1,45 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "BASE_IMAGE": "ros:foxy-ros-base"
+        }
+    },
+
+    "remoteUser": "root",
+    "runArgs": [
+        "--network=host",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt=seccomp:unconfined",
+        "--security-opt=apparmor:unconfined",
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
+        "--volume=/usr/local/zed/resources:/usr/local/zed/resources",
+        "--volume=/usr/local/zed/settings:/usr/local/zed/settings",
+        "--runtime=nvidia",
+        "--gpus=all",
+        "-e", "DISPLAY=${env:DISPLAY}",
+        "-e", "ROS_DOMAIN_ID=${env:ROS_DOMAIN_ID}",
+        "-e", "NVIDIA_DRIVER_CAPABILITIES=video,compute,utility",
+        "--privileged"
+    ],
+    
+    
+    "containerEnv": { "DISPLAY": "${localEnv:DISPLAY}" },
+    "name": "${localWorkspaceFolderBasename}",
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "ms-python.python",
+                "ms-vscode.cpptools",
+                "redhat.vscode-yaml",
+                "ms-iot.vscode-ros",
+                "smilerobotics.urdf",
+                "twxs.cmake",
+                "yzhang.markdown-all-in-one",
+                "mhutchie.git-graph"
+            ]
+        }
+    }
+}
