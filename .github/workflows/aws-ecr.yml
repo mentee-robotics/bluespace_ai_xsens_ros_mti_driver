@@ -46,7 +46,7 @@ jobs:
           docker buildx create --use
           docker buildx build --push \
           --platform $architectures \
-          --build-arg BASE_IMAGE=ros:galactic-ros-base \
+          --build-arg BASE_IMAGE=ros:foxy-ros-base \
           --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag}} \
           --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:latest \
           --file .devcontainer/Dockerfile . 
