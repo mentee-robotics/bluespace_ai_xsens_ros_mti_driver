@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(bluespace_ai_xsens_mti_driver)
 
 cmake_policy(SET CMP0057 NEW)
@@ -6,6 +6,10 @@ cmake_policy(SET CMP0057 NEW)
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 # Find dependencies
@@ -22,8 +26,12 @@ find_package(Eigen3)
 ###########
 ## Build ##
 ###########
+set(xspublic_linked_libraries
+  xscontroller
+  xscommon
+  xstypes
+)
 
-link_directories(lib/xspublic/xscontroller lib/xspublic/xscommon lib/xspublic/xstypes)
 add_executable(
 	xsens_mti_node
 	src/main.cpp
@@ -32,9 +40,15 @@ add_executable(
   src/kalman_filter.cpp
 )
 
+target_link_libraries(xspublic_linked_libraries
+                      ${xspublic_linked_libraries})
+
 target_include_directories(xsens_mti_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic>
-  $<INSTALL_INTERFACE:include>)
+  /usr/include/lib/xspublic  
+)
+
+target_link_directories(xsens_mti_node PUBLIC
+  /usr/lib/xspublics)
 
 ament_target_dependencies(xsens_mti_node 
   rclcpp
