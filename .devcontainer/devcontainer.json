@@ -3,7 +3,8 @@
         "dockerfile": "Dockerfile",
         "args": {
             "BASE_IMAGE": "ros:foxy-ros-base"
-        }
+        },
+        "target": "base"
     },
 
     "remoteUser": "root",
