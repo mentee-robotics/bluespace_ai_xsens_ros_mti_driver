@@ -2,3 +2,8 @@
 *.o
 *.dpp
 *.a
+
+# ROS
+build/
+install/
+log/

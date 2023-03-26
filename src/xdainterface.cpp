@@ -225,27 +225,28 @@ bool XdaInterface::connectDevice()
 	else
 	{
 		RCLCPP_INFO(get_logger(), "Scanning for devices...");
-		XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
+		mtPort = XsScanner::scanPort("/dev/ttyTHS1",XBR_230k4);
+		// XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
 
-		for (auto const &portInfo : portInfoArray)
-		{
-			if (portInfo.deviceId().isMti() || portInfo.deviceId().isMtig())
-			{
-				if (checkDeviceID)
-				{
-					if (portInfo.deviceId().toString().c_str() == deviceId)
-					{
-						mtPort = portInfo;
-						break;
-					}
-				}
-				else
-				{
-					mtPort = portInfo;
-					break;
-				}
-			}
-		}
+		// for (auto const &portInfo : portInfoArray)
+		// {
+		// 	if (portInfo.deviceId().isMti() || portInfo.deviceId().isMtig())
+		// 	{
+		// 		if (checkDeviceID)
+		// 		{
+		// 			if (portInfo.deviceId().toString().c_str() == deviceId)
+		// 			{
+		// 				mtPort = portInfo;
+		// 				break;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			mtPort = portInfo;
+		// 			break;
+		// 		}
+		// 	}
+		// }
 	}
 
 	if (mtPort.empty())
