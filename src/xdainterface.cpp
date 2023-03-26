@@ -234,7 +234,7 @@ bool XdaInterface::connectDevice()
 	else
 	{
 		RCLCPP_INFO(get_logger(), "Scanning for devices...");
-		mtPort = XsScanner::scanPort("/dev/ttyTHS0", XBR_230k4);
+		mtPort = XsScanner::scanPort("/dev/ttyTHS1",XBR_230k4);
 		// XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
 
 		// for (auto const &portInfo : portInfoArray)
