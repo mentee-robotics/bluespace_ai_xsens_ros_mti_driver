@@ -72,7 +72,7 @@
 #include "messagepublishers/freeaccelerationpublisher.h"
 #include "messagepublishers/gnsspublisher.h"
 #include "messagepublishers/imupublisher.h"
-#include "messagepublishers/imuFreeAccPublisher.h"
+#include "messagepublishers/imufreepublisher.h"
 #include "messagepublishers/magneticfieldpublisher.h"
 #include "messagepublishers/orientationincrementspublisher.h"
 #include "messagepublishers/orientationpublisher.h"
@@ -127,8 +127,7 @@ void XdaInterface::registerPublishers()
 	}
 	if (get_parameter("pub_imu_free", should_publish) && should_publish)
 	{
-		RCLCPP_INFO(get_logger(), "Free imu is published");
-		registerCallback(new ImuFreeAccPublisher(node));
+		registerCallback(new ImuFreePublisher(node));
 	}
 	if (get_parameter("pub_quaternion", should_publish) && should_publish)
 	{
@@ -177,6 +176,10 @@ void XdaInterface::registerPublishers()
 		registerCallback(new TwistPublisher(node));
 	}
 	if (get_parameter("pub_free_acceleration", should_publish) && should_publish)
+	{
+		registerCallback(new FreeAccelerationPublisher(node));
+	}
+	if (get_parameter("pub_free_acceleration_imu_frame", should_publish) && should_publish)
 	{
 		registerCallback(new FreeAccelerationPublisher(node));
 	}
@@ -234,27 +237,28 @@ bool XdaInterface::connectDevice()
 	else
 	{
 		RCLCPP_INFO(get_logger(), "Scanning for devices...");
-		XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
+		mtPort = XsScanner::scanPort("/dev/ttyTHS1",XBR_230k4);
+		// XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
 
-		for (auto const &portInfo : portInfoArray)
-		{
-			if (portInfo.deviceId().isMti() || portInfo.deviceId().isMtig())
-			{
-				if (checkDeviceID)
-				{
-					if (portInfo.deviceId().toString().c_str() == deviceId)
-					{
-						mtPort = portInfo;
-						break;
-					}
-				}
-				else
-				{
-					mtPort = portInfo;
-					break;
-				}
-			}
-		}
+		// for (auto const &portInfo : portInfoArray)
+		// {
+		// 	if (portInfo.deviceId().isMti() || portInfo.deviceId().isMtig())
+		// 	{
+		// 		if (checkDeviceID)
+		// 		{
+		// 			if (portInfo.deviceId().toString().c_str() == deviceId)
+		// 			{
+		// 				mtPort = portInfo;
+		// 				break;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			mtPort = portInfo;
+		// 			break;
+		// 		}
+		// 	}
+		// }
 	}
 
 	if (mtPort.empty())
@@ -372,10 +376,10 @@ void XdaInterface::declareCommonParameters()
 	declare_parameter("pub_gnss", should_publish);
 	declare_parameter("pub_twist", should_publish);
 	declare_parameter("pub_free_acceleration", should_publish);
+	declare_parameter("pub_free_acceleration_imu_frame", should_publish);
 	declare_parameter("pub_transform", should_publish);
 	declare_parameter("pub_positionLLA", should_publish);
 	declare_parameter("pub_velocity", should_publish);
-
 	declare_parameter("scan_for_devices", true);
 	declare_parameter("device_id", "");
 	declare_parameter("port", "");
