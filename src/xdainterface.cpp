@@ -72,7 +72,6 @@
 #include "messagepublishers/freeaccelerationpublisher.h"
 #include "messagepublishers/gnsspublisher.h"
 #include "messagepublishers/imupublisher.h"
-#include "messagepublishers/imuFreeAccPublisher.h"
 #include "messagepublishers/magneticfieldpublisher.h"
 #include "messagepublishers/orientationincrementspublisher.h"
 #include "messagepublishers/orientationpublisher.h"
@@ -124,11 +123,6 @@ void XdaInterface::registerPublishers()
 	if (get_parameter("pub_imu", should_publish) && should_publish)
 	{
 		registerCallback(new ImuPublisher(node));
-	}
-	if (get_parameter("pub_imu_free", should_publish) && should_publish)
-	{
-		RCLCPP_INFO(get_logger(), "Free imu is published");
-		registerCallback(new ImuFreeAccPublisher(node));
 	}
 	if (get_parameter("pub_quaternion", should_publish) && should_publish)
 	{
