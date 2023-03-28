@@ -287,7 +287,7 @@ bool XdaInterface::prepare()
 	// read EMTS and device config stored in .mtb file header.
 	if (!m_device->readEmtsAndDeviceConfiguration())
 		return handleError("Could not read device configuration");
-	
+
 	XsOutputConfigurationArray configArray;
 	configArray.push_back(XsOutputConfiguration(XDI_UtcTime, 0));
 	configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
