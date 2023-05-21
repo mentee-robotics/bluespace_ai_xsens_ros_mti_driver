@@ -275,7 +275,7 @@ struct ImuFreeAccPublisher : public PacketCallback, PublisherHelperFunctions
                 msg.header.stamp = get_utc_time(packet);
             else
                 msg.header.stamp = timestamp;
-            msg.header.frame_id = std::to_string(frameId);
+            msg.header.frame_id = "imu_link";
             frameId++;
             
             msg.orientation = quaternion;
