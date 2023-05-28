@@ -25,7 +25,7 @@
         use_imu_time: false
 
         # Message publishers
-        pub_imu: false
+        pub_imu: true
         pub_imu_free: true
         pub_quaternion: false
         pub_mag: false
