@@ -18,7 +18,7 @@ def generate_launch_description():
     
     pkg_shared_dir = get_package_share_directory('bluespace_ai_xsens_mti_driver')
     imu_params = DeclareLaunchArgument('imu_params', 
-                                       default_value=os.path.join(pkg_shared_dir, 'config', 'xsens_mti_node.yaml')
+                                       default_value=os.path.join(pkg_shared_dir, 'param', 'xsens_mti_node.yaml')
     )
     
     xsens_mti_node = Node(
