@@ -15,13 +15,8 @@
         "--security-opt=seccomp:unconfined",
         "--security-opt=apparmor:unconfined",
         "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
-        "--volume=/usr/local/zed/resources:/usr/local/zed/resources",
-        "--volume=/usr/local/zed/settings:/usr/local/zed/settings",
-        "--runtime=nvidia",
-        "--gpus=all",
         "-e", "DISPLAY=${env:DISPLAY}",
         "-e", "ROS_DOMAIN_ID=${env:ROS_DOMAIN_ID}",
-        "-e", "NVIDIA_DRIVER_CAPABILITIES=video,compute,utility",
         "--privileged"
     ],
     
