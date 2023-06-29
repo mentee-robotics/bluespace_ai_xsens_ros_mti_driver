@@ -3,6 +3,7 @@
 *.dpp
 *.a
 
-# VSCode
-.vscode
-
+# ROS
+build/
+install/
+log/

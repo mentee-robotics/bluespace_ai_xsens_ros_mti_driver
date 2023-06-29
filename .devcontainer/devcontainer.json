@@ -1,0 +1,51 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "BASE_IMAGE": "ros:foxy-ros-base"
+        },
+        "target": "base",
+        "context": ".."
+    },
+
+    "remoteUser": "root",
+    "runArgs": [
+        "--network=host",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt=seccomp:unconfined",
+        "--security-opt=apparmor:unconfined",
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
+        "-e", "DISPLAY=${env:DISPLAY}",
+        "-e", "ROS_DOMAIN_ID=${env:ROS_DOMAIN_ID}",
+        "--privileged"
+    ],
+    "containerEnv": {
+		"DISPLAY": "${localEnv:DISPLAY}", // for GUI applications
+		"ROS_LOCALHOST_ONLY": "0", // DO NOT publish ROS topics over WIFI
+		"ROS_DOMAIN_ID": "${localEnv:ROS_DOMAIN_ID}",
+		"SSH_AUTH_SOCK": "/ssh-agent"
+	},
+    
+    "name": "${localWorkspaceFolderBasename}",
+    "mounts": [
+		"source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind,consistency=cached",
+		"source=/home/${localEnv:USERNAME}/.ssh,target=/home/${localEnv:USERNAME}/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:MTB_GENERIC_CONFIG_PATH},target=/mtb_generic_config,type=bind,consistency=cached",
+		"source=${localEnv:MTB_ROBOT_CONFIG_PATH},target=/mtb_robot_config,type=bind,consistency=cached"
+	],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "ms-python.python",
+                "ms-vscode.cpptools",
+                "redhat.vscode-yaml",
+                "ms-iot.vscode-ros",
+                "smilerobotics.urdf",
+                "twxs.cmake",
+                "yzhang.markdown-all-in-one",
+                "mhutchie.git-graph"
+            ]
+        }
+    }
+}

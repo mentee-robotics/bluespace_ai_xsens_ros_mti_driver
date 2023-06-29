@@ -59,29 +59,29 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#ifndef IMUPUBLISHER_H
-#define IMUPUBLISHER_H
+#ifndef IMUFREEPUBLISHER_H
+#define IMUFREEPUBLISHER_H
 
 #include "packetcallback.h"
 #include "publisherhelperfunctions.h"
 #include <sensor_msgs/msg/imu.hpp>
 
 
-struct ImuPublisher : public PacketCallback, PublisherHelperFunctions
+struct ImuFreePublisher : public PacketCallback, PublisherHelperFunctions
 {
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub;
     double orientation_variance[3];
     double linear_acceleration_variance[3];
     double angular_velocity_variance[3];
-    int frameId;
     rclcpp::Node& node_handle;
 
-    ImuPublisher(rclcpp::Node &node)
+    ImuFreePublisher(rclcpp::Node &node)
         : node_handle(node)
     {
+
         int pub_queue_size = 5;
         node.get_parameter("publisher_queue_size", pub_queue_size);
-        pub = node.create_publisher<sensor_msgs::msg::Imu>("/imu/none_filtered", pub_queue_size);
+        pub = node.create_publisher<sensor_msgs::msg::Imu>("/imu/free_acceleration", pub_queue_size);
 
         // REP 145: Conventions for IMU Sensor Drivers (http://www.ros.org/reps/rep-0145.html)
         variance_from_stddev_param("orientation_stddev", orientation_variance, node);
@@ -93,7 +93,7 @@ struct ImuPublisher : public PacketCallback, PublisherHelperFunctions
     {
         bool quaternion_available = packet.containsOrientation();
         bool gyro_available = packet.containsCalibratedGyroscopeData();
-        bool accel_available = packet.containsCalibratedAcceleration();
+        bool accel_available = packet.containsFreeAcceleration();
 
         geometry_msgs::msg::Quaternion quaternion;
         if (quaternion_available)
@@ -116,12 +116,18 @@ struct ImuPublisher : public PacketCallback, PublisherHelperFunctions
         }
 
         geometry_msgs::msg::Vector3 accel;
-        if (accel_available)
+        if (accel_available && quaternion_available)
         {
-            XsVector a = packet.calibratedAcceleration();
-            accel.x = a[0];
-            accel.y = a[1];
-            accel.z = a[2];
+            XsVector a = packet.freeAcceleration();
+            XsQuaternion q = packet.orientationQuaternion();
+
+            // Rotate acceleration vector according to orientation quaternion
+            XsQuaternion q_conj = q.conjugate();
+            XsQuaternion q_a = q * XsQuaternion(0, a[0], a[1], a[2]) * q_conj;
+
+            accel.x = q_a[1];
+            accel.y = q_a[2];
+            accel.z = q_a[3];
         }
 
         // Imu message, publish if any of the fields is available
@@ -129,10 +135,11 @@ struct ImuPublisher : public PacketCallback, PublisherHelperFunctions
         {
             sensor_msgs::msg::Imu msg;
 
-            
+            std::string frame_id = DEFAULT_FRAME_ID;
+            node_handle.get_parameter("frame_id", frame_id);
+
             msg.header.stamp = timestamp;
-            msg.header.frame_id = std::to_string(frameId);
-            frameId++;
+            msg.header.frame_id = frame_id;
 
             msg.orientation = quaternion;
             if (quaternion_available)

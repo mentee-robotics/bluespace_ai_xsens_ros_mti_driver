@@ -5,9 +5,9 @@
         ##  - scan_for devices = 
         ##          true:   the driver ignores port and baudrate settings, scans for devices on all ports and selects the first found
         ##          false: = Requires correct port and baudrate both to be specified
-        scan_for_devices: true
-        port: "" # port name, e.g. '/dev/ttyUSB0'
-        baudrate: 460800 # non necessary for some devices
+        scan_for_devices: false
+        port: "/dev/ttyTHS0" # port name, e.g. '/dev/ttyUSB0'
+        baudrate: 230400 # non necessary for some devices
 
         ## Connect only to specific device_id:
         ##  device_id = '077007EF' (uppercase hex string), returns with error if the device with ID is not found on the ports
@@ -24,6 +24,9 @@
         time_zone_offset: 2
         use_imu_time: false
 
+        time_zone_offset: 2
+        use_imu_time: false
+        
         # Message publishers
         pub_imu: false
         pub_imu_free: true
@@ -47,8 +50,8 @@
         ## This value is used to override the covariance matrix in sensor_msgs/Imu and
         ## sensor_msgs/MagneticField messages.
         ## Important: Make sure the values provided are in decimal points, or else might give error in execution
-        linear_acceleration_stddev: [0.0, 0.0, 0.0] # [m/s^2]
-        angular_velocity_stddev: [0.0, 0.0, 0.0] # [rad/s]
+        linear_acceleration_stddev: [0.083155757467538, 0.083155757467538, 0.083155757467538] # [m/s^2]
+        angular_velocity_stddev: [0.001727787809283809, 0.001727787809283809, 0.001727787809283809] # [rad/s]
         orientation_stddev: [0.0, 0.0, 0.0] # [rad]
         magnetic_field_stddev: [0.0, 0.0, 0.0] # [Tesla]
 
