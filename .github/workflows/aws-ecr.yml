@@ -1,0 +1,58 @@
+name: Docker Image CI
+
+on:
+  create:
+    tags:
+      - '*' # Push events on new tag
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive 
+          token: ${{ secrets.PAT_TOKEN}}
+      - 
+        name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+      -
+        name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      -
+        name: create aws ecr repository
+        uses: int128/create-ecr-repository-action@v1
+        id: create-ecr-repository
+        with:
+          repository: ${{ github.event.repository.name }} 
+      -
+        name: get tag
+        id: tag
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+      - 
+        name: Build tag and push image to AMAZON ECR
+        id: build-image
+        env:
+          architectures: linux/amd64,linux/arm64
+        run: |
+          echo $architectures
+          echo ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:latest
+          docker run --privileged --rm tonistiigi/binfmt --install arm64
+          docker buildx create --use
+          docker buildx build --push \
+          --platform $architectures \
+          --build-arg BASE_IMAGE=ros:humble-ros-base \
+          --build-arg WORKSPACE=/home/ws \
+          --build-arg ROS_DISTRO=humble \
+          --target release \
+          --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag}} \
+          --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:latest \
+          --file .devcontainer/Dockerfile . 
+
