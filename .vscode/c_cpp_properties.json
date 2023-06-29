@@ -4,7 +4,10 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/opt/ros/${ROS_DISTRO}/include/**"
+                "/opt/ros/${ROS_DISTRO}/include/**",
+                "./src/**",
+                "/opt/ros/foxy/include",
+                "/opt/ros/foxy/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

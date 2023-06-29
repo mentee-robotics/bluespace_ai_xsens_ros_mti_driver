@@ -71,6 +71,7 @@
 #include "messagepublishers/freeaccelerationpublisher.h"
 #include "messagepublishers/gnsspublisher.h"
 #include "messagepublishers/imupublisher.h"
+#include "messagepublishers/imufreepublisher.h"
 #include "messagepublishers/magneticfieldpublisher.h"
 #include "messagepublishers/orientationincrementspublisher.h"
 #include "messagepublishers/orientationpublisher.h"
@@ -122,6 +123,10 @@ void XdaInterface::registerPublishers()
 	if (get_parameter("pub_imu", should_publish) && should_publish)
 	{
 		registerCallback(new ImuPublisher(node));
+	}
+	if (get_parameter("pub_imu_free", should_publish) && should_publish)
+	{
+		registerCallback(new ImuFreePublisher(node));
 	}
 	if (get_parameter("pub_quaternion", should_publish) && should_publish)
 	{
@@ -342,6 +347,7 @@ void XdaInterface::declareCommonParameters()
 
 	bool should_publish = true;
 	declare_parameter("pub_imu", should_publish);
+	declare_parameter("pub_imu_free", should_publish);
 	declare_parameter("pub_quaternion", should_publish);
 	declare_parameter("pub_acceleration", should_publish);
 	declare_parameter("pub_angular_velocity", should_publish);
@@ -358,7 +364,6 @@ void XdaInterface::declareCommonParameters()
 	declare_parameter("pub_transform", should_publish);
 	declare_parameter("pub_positionLLA", should_publish);
 	declare_parameter("pub_velocity", should_publish);
-
 	declare_parameter("scan_for_devices", true);
 	declare_parameter("device_id", "");
 	declare_parameter("port", "");
