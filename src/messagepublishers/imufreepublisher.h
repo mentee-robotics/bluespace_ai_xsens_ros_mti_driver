@@ -129,9 +129,9 @@ struct ImuFreePublisher : public PacketCallback, PublisherHelperFunctions
             XsQuaternion q_conj = q.conjugate();
             XsQuaternion q_a = q * XsQuaternion(0, a[0], a[1], a[2]) * q_conj;
 
-            accel.x = q_a[0];
-            accel.y = q_a[1];
-            accel.z = q_a[2];
+            accel.x = q_a[1];
+            accel.y = q_a[2];
+            accel.z = q_a[3];
         }
 
         // Imu message, publish if any of the fields is available
