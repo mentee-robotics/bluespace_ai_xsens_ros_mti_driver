@@ -171,6 +171,10 @@ void XdaInterface::registerPublishers()
 	{
 		registerCallback(new FreeAccelerationPublisher(node));
 	}
+	if (get_parameter("pub_free_acceleration_imu_frame", should_publish) && should_publish)
+	{
+		registerCallback(new FreeAccelerationPublisher(node));
+	}
 	if (get_parameter("pub_transform", should_publish) && should_publish)
 	{
 		registerCallback(new TransformPublisher(node));
@@ -350,6 +354,7 @@ void XdaInterface::declareCommonParameters()
 	declare_parameter("pub_gnss", should_publish);
 	declare_parameter("pub_twist", should_publish);
 	declare_parameter("pub_free_acceleration", should_publish);
+	declare_parameter("pub_free_acceleration_imu_frame", should_publish);
 	declare_parameter("pub_transform", should_publish);
 	declare_parameter("pub_positionLLA", should_publish);
 	declare_parameter("pub_velocity", should_publish);
