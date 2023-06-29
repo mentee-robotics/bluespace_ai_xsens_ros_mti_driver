@@ -24,6 +24,9 @@
         time_zone_offset: 2
         use_imu_time: false
 
+        time_zone_offset: 2
+        use_imu_time: false
+        
         # Message publishers
         pub_imu: false
         pub_imu_free: true
@@ -47,8 +50,8 @@
         ## This value is used to override the covariance matrix in sensor_msgs/Imu and
         ## sensor_msgs/MagneticField messages.
         ## Important: Make sure the values provided are in decimal points, or else might give error in execution
-        linear_acceleration_stddev: [0.0, 0.0, 0.0] # [m/s^2]
-        angular_velocity_stddev: [0.0, 0.0, 0.0] # [rad/s]
+        linear_acceleration_stddev: [0.083155757467538, 0.083155757467538, 0.083155757467538] # [m/s^2]
+        angular_velocity_stddev: [0.001727787809283809, 0.001727787809283809, 0.001727787809283809] # [rad/s]
         orientation_stddev: [0.0, 0.0, 0.0] # [rad]
         magnetic_field_stddev: [0.0, 0.0, 0.0] # [Tesla]
 

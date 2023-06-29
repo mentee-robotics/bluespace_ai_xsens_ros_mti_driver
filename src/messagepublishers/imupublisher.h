@@ -79,8 +79,6 @@ struct ImuPublisher : public PacketCallback, PublisherHelperFunctions
     ImuPublisher(rclcpp::Node &node)
         : node_handle(node)
     {
-        frameId = 0;
-
         int pub_queue_size = 5;
         node.get_parameter("publisher_queue_size", pub_queue_size);
         pub = node.create_publisher<sensor_msgs::msg::Imu>("/imu/none_filtered", pub_queue_size);

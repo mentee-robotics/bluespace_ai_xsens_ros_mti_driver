@@ -1,0 +1,100 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        // Build tasks
+        {
+            "label": "build",
+            "detail": "Build workspace (Default)",
+            "type": "shell",
+            "command": "colcon build --symlink-install",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "build debug",
+            "detail": "Build workspace (Debug)",
+            "type": "shell",
+            "command": "colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "build debug package",
+            "detail": "Build package (Debug)",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args -DCMAKE_BUILD_TYPE=Debug",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "clean rebuild",
+            "detail": "clean ws and build (Release)",
+            "type": "shell",
+            "command": "rm -r install log build && colcon build --symlink-install",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "clean rebuild debug",
+            "detail": "clean ws and build (Debug)",
+            "type": "shell",
+            "command": "rm -r install log build && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        // Build images, NOT in dev container
+        {
+            "label": "build docker release",
+            "type": "docker-build",
+            "dockerBuild": {
+                "context": "${workspaceFolder}",
+                "dockerfile": "${workspaceFolder}/.devcontainer/Dockerfile",
+                "buildArgs": {
+                    "BASE_IMAGE": "ros:humble-ros-base",
+                },
+                "target": "release",
+                "tag": "menteebot/${workspaceFolderBasename}:v${input:imageTag}"
+            }
+        },
+        {
+            "label": "build docker development",
+            "type": "docker-build",
+            "dockerBuild": {
+                "context": "${workspaceFolder}",
+                "dockerfile": "${workspaceFolder}/.devcontainer/Dockerfile",
+                "buildArgs": {
+                    "BASE_IMAGE": "ros:humble-ros-base",
+                },
+                "target": "development",
+                "tag": "menteebot/${workspaceFolderBasename}:dev-v${input:imageTag}"
+            }
+        },
+    ],
+    "inputs": [
+        {
+          "type": "promptString",
+          "id": "imageTag",
+          "description": "tag number",
+          "default": "X.X"
+        },
+        {
+            "id": "package",
+            "type": "promptString",
+            "description": "Enter the package name",
+            "default": "package-name"
+        }
+      ]
+}

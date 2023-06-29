@@ -237,7 +237,7 @@ bool XdaInterface::connectDevice()
 	else
 	{
 		RCLCPP_INFO(get_logger(), "Scanning for devices...");
-		mtPort = XsScanner::scanPort("/dev/ttyTHS1",XBR_230k4);
+		mtPort = XsScanner::scanPort("/dev/ttyTHS0",XBR_230k4);
 		// XsPortInfoArray portInfoArray = XsScanner::scanPorts(baudrate);
 
 		// for (auto const &portInfo : portInfoArray)
@@ -291,6 +291,18 @@ bool XdaInterface::prepare()
 	if (!m_device->readEmtsAndDeviceConfiguration())
 		return handleError("Could not read device configuration");
 	
+	XsOutputConfigurationArray configArray;
+	configArray.push_back(XsOutputConfiguration(XDI_UtcTime, 0));
+	configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
+	configArray.push_back(XsOutputConfiguration(XDI_FreeAcceleration, 200));
+	configArray.push_back(XsOutputConfiguration(XDI_Acceleration, 200));
+	configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, 200));
+	configArray.push_back(XsOutputConfiguration(XDI_Quaternion, 200));
+	if (!m_device->setOutputConfiguration(configArray))
+		return handleError("Could not configure MTi device. Aborting.");
+	
+	m_device->setUtcTime(XsTimeInfo::currentTime());
+
 	XsOutputConfigurationArray configArray;
 	configArray.push_back(XsOutputConfiguration(XDI_UtcTime, 0));
 	configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
@@ -376,10 +388,10 @@ void XdaInterface::declareCommonParameters()
 	declare_parameter("pub_gnss", should_publish);
 	declare_parameter("pub_twist", should_publish);
 	declare_parameter("pub_free_acceleration", should_publish);
-	declare_parameter("pub_free_acceleration_imu_frame", should_publish);
 	declare_parameter("pub_transform", should_publish);
 	declare_parameter("pub_positionLLA", should_publish);
 	declare_parameter("pub_velocity", should_publish);
+
 	declare_parameter("scan_for_devices", true);
 	declare_parameter("device_id", "");
 	declare_parameter("port", "");
@@ -393,7 +405,5 @@ void XdaInterface::declareCommonParameters()
     declare_parameter("orientation_stddev", variance);
     declare_parameter("angular_velocity_stddev", variance);
     declare_parameter("linear_acceleration_stddev", variance);
-
-
 
 }
