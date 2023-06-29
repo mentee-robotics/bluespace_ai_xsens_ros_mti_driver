@@ -388,11 +388,9 @@ void XdaInterface::declareCommonParameters()
 	declare_parameter("log_file", "log.mtb");
 	declare_parameter("time_zone_offset", 0);
 
-	// std::vector<double> variance = {0, 0, 0};
-    // declare_parameter("orientation_stddev", variance);
-    // declare_parameter("angular_velocity_stddev", variance);
-    // declare_parameter("linear_acceleration_stddev", variance);
-
-
+	std::vector<double> variance = {0, 0, 0};
+    declare_parameter("orientation_stddev", variance);
+    declare_parameter("angular_velocity_stddev", variance);
+    declare_parameter("linear_acceleration_stddev", variance);
 
 }
