@@ -63,7 +63,7 @@
                 "context": "${workspaceFolder}",
                 "dockerfile": "${workspaceFolder}/.devcontainer/Dockerfile",
                 "buildArgs": {
-                    "BASE_IMAGE": "ros:humble-ros-base",
+                    "BASE_IMAGE": "ros:foxy-ros-base",
                 },
                 "target": "release",
                 "tag": "menteebot/${workspaceFolderBasename}:v${input:imageTag}"
@@ -76,7 +76,7 @@
                 "context": "${workspaceFolder}",
                 "dockerfile": "${workspaceFolder}/.devcontainer/Dockerfile",
                 "buildArgs": {
-                    "BASE_IMAGE": "ros:humble-ros-base",
+                    "BASE_IMAGE": "ros:foxy-ros-base",
                 },
                 "target": "development",
                 "tag": "menteebot/${workspaceFolderBasename}:dev-v${input:imageTag}"

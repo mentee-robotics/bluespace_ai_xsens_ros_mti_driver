@@ -55,4 +55,3 @@ jobs:
           --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag}} \
           --tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:latest \
           --file .devcontainer/Dockerfile . 
-
