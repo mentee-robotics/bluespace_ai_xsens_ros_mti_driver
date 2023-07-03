@@ -71,6 +71,7 @@
 #include "messagepublishers/freeaccelerationpublisher.h"
 #include "messagepublishers/gnsspublisher.h"
 #include "messagepublishers/imupublisher.h"
+#include "messagepublishers/imufreepublisher.h"
 #include "messagepublishers/magneticfieldpublisher.h"
 #include "messagepublishers/orientationincrementspublisher.h"
 #include "messagepublishers/orientationpublisher.h"
@@ -122,6 +123,10 @@ void XdaInterface::registerPublishers()
 	if (get_parameter("pub_imu", should_publish) && should_publish)
 	{
 		registerCallback(new ImuPublisher(node));
+	}
+	if (get_parameter("pub_imu_free", should_publish) && should_publish)
+	{
+		registerCallback(new ImuFreePublisher(node));
 	}
 	if (get_parameter("pub_quaternion", should_publish) && should_publish)
 	{
@@ -337,6 +342,7 @@ void XdaInterface::declareCommonParameters()
 
 	bool should_publish = true;
 	declare_parameter("pub_imu", should_publish);
+	declare_parameter("pub_imu_free", should_publish);
 	declare_parameter("pub_quaternion", should_publish);
 	declare_parameter("pub_acceleration", should_publish);
 	declare_parameter("pub_angular_velocity", should_publish);
@@ -360,4 +366,11 @@ void XdaInterface::declareCommonParameters()
 
 	declare_parameter("enable_logging", false);
 	declare_parameter("log_file", "log.mtb");
+	declare_parameter("time_zone_offset", 0);
+
+	std::vector<double> variance = {0, 0, 0};
+    declare_parameter("orientation_stddev", variance);
+    declare_parameter("angular_velocity_stddev", variance);
+    declare_parameter("linear_acceleration_stddev", variance);
+
 }
