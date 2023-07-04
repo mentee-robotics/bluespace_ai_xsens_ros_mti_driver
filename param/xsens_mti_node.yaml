@@ -34,7 +34,7 @@
         pub_mag: false
         pub_angular_velocity: false
         pub_acceleration: false
-        pub_free_acceleration: false
+        pub_free_acceleration: true
         pub_dq: false
         pub_dv: false
         pub_sampletime: false
@@ -42,7 +42,7 @@
         pub_pressure: false
         pub_gnss: false
         pub_twist: false
-        pub_transform: false
+        pub_transform: true
         pub_positionLLA: false
         pub_velocity: false
 
